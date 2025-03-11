@@ -143,3 +143,40 @@ SELECT COUNT(*) FROM tb_clientes WHERE cliente_idade > 30 AND cliente_estado IN 
 SELECT * FROM tb_clientes WHERE cliente_email LIKE CONCAT('%', cliente_nome, '%', '@%'); --Não listou nenhum cliente--;
 -- Mostre os clientes que moram na mesma cidade que "Pedro Santos".
 SELECT * FROM tb_clientes WHERE cliente_cidade = (SELECT cliente_cidade FROM tb_clientes WHERE cliente_nome = 'Pedro Santos');
+
+______________________________________________________________________________________________________________________
+Criação de uma tabela telefones.sql
+
+ALTER TABLE tb_telefones --Alterar a tabela tb_telefones--
+ADD CONSTRAINT fk_clientes_telefones --Adicionar restrição de chave estrangeira--
+FOREIGN KEY (cliente_id_telefone) --Chave estrangeira--
+REFERENCES tb_clientes(cliente_id); --Chave primária--
+
+INSERT INTO tb_telefones(cliente_id_telefone, numero_telefone) --Inserir dados na tabela tb_telefones--
+VALUES(5, '16993360312')
+INSERT INTO tb_telefones(cliente_id_telefone, numero_telefone)
+VALUES(3, '1137840518')
+INSERT INTO tb_telefones(cliente_id_telefone, numero_telefone)
+VALUES(7, '16362840518')
+INSERT INTO tb_telefones(cliente_id_telefone, numero_telefone)
+VALUES(1, '119362840522')
+INSERT INTO tb_telefones(cliente_id_telefone, numero_telefone)
+VALUES(4, '1632773299')
+DELETE FROM tb_clientes WHERE cliente_id = 8; --Deletar cliente--
+
+SELECT cliente_nome, numero_telefone --Selecionar nome do cliente e número de telefone--
+FROM tb_telefones --Tabela tb_telefones--
+JOIN tb_clientes ON tb_telefones.cliente_id_telefone = tb_clientes.cliente_id --Juntar as tabelas--
+--tb_telefones e tb_clientes não importando a posição--
+ORDER BY cliente_nome --Ordenar por nome--
+
+LEFT JOIN tb_clientes ON tb_telefones.cliente_id_telefone = tb_clientes.cliente_id --Traz todos os registros da-- 
+--tabela da esquerda mesmo que os da direita sejam nulos--
+RIGHT JOIN tb_clientes ON tb_telefones.cliente_id_telefone = tb_clientes.cliente_id --Traz todos os registros da--
+--tabela da direita mesmo que os da esquerda sejam nulos--
+
+SELECT c.cliente_nome, t.numero_telefone --Selecionar nome do cliente e número de telefone--
+FROM tb_clientes c LEFT JOIN tb_telefones t --Tabela tb_clientes e tb_telefones--
+ON t.cliente_id_telefone = c.cliente_id --Chave estrangeira--
+WHERE t.numero_telefone IS NULL --Mostrar apenas os clientes que não possuem telefone--
+ORDER BY c.cliente_nome; --Ordenar por nome--
